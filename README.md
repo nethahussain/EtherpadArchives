@@ -90,19 +90,40 @@ No authentication is needed — this only queries publicly available data.
 | Meta-Wiki | 2,811 | 2,885 |
 | Wikimania | 626 | 997 |
 
-## Next steps for preservation
+## Downloading Etherpad contents
 
-Once you have the list of Etherpad URLs, you can:
+Once you have the links JSON, use `download_etherpads.py` to bulk-download the actual pad contents:
 
-1. **Bulk download pad contents** using the Etherpad export API:
-   ```
-   https://etherpad.wikimedia.org/p/{pad_name}/export/txt
-   https://etherpad.wikimedia.org/p/{pad_name}/export/html
-   ```
+```bash
+# Step 1: Find all links
+python fetch_etherpad_links.py --wiki wikimania
 
-2. **Archive to the Wayback Machine** using the Save Page Now API
+# Step 2: Download all pad contents
+python download_etherpads.py output/wikimania_wikimedia_etherpad_links.json
+```
 
-3. **Copy contents to wiki pages** for long-term preservation on-wiki
+### Downloader options
+
+```bash
+# Resume an interrupted download (skips already-downloaded files)
+python download_etherpads.py output/links.json --resume
+
+# Custom output directory
+python download_etherpads.py output/links.json --output my_pads/
+
+# Slower requests (be polite to the server)
+python download_etherpads.py output/links.json --delay 1.0
+```
+
+The downloader saves each pad as a `.txt` file, plus a `_manifest.json` with statistics and a `_download_log.json` with any errors.
+
+## Further preservation steps
+
+Beyond downloading, you can also:
+
+1. **Archive to the Wayback Machine** using the Save Page Now API
+
+2. **Copy contents to wiki pages** for long-term preservation on-wiki
 
 ## Requirements
 
